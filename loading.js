@@ -1,27 +1,31 @@
 const loading = {
     intervalId: null,
+    overlay: null,
     container: null,
     textElement: null,
     
     start() {
-        // If already running, do nothing
-        if (this.container) return;
+        if (this.overlay) return; // Nếu đang chạy thì không tạo thêm
         
-        // Create loading container
+        // Tạo overlay bao phủ toàn màn hình
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'overlay-loading';
+        this.overlay.style.display = 'block';
+        
+        // Tạo container loading bên trong overlay
         this.container = document.createElement('div');
         this.container.className = 'loading-container';
-        this.container.style.display = 'block';
         
-        // Create universe flow
+        // Tạo universe flow
         const universeFlow = document.createElement('div');
         universeFlow.className = 'universe-flow';
         
-        // Create energy path
+        // energy path
         const energyPath = document.createElement('div');
         energyPath.className = 'energy-path';
         universeFlow.appendChild(energyPath);
         
-        // Create particles
+        // particles
         const particleColors = [
             { bg: '#00f2fe', shadow: '#00f2fe' },
             { bg: '#4facfe', shadow: '#4facfe' },
@@ -36,18 +40,18 @@ const loading = {
             universeFlow.appendChild(particle);
         });
         
-        // Create loading text
+        // loading text
         this.textElement = document.createElement('div');
         this.textElement.className = 'loading-text';
         this.textElement.textContent = 'Đang kết nối vũ trụ...';
         universeFlow.appendChild(this.textElement);
         
-        // Create stars container
+        // stars container
         const starsContainer = document.createElement('div');
         starsContainer.className = 'stars';
         universeFlow.appendChild(starsContainer);
         
-        // Generate stars
+        // generate stars
         const starCount = 30;
         for (let i = 0; i < starCount; i++) {
             const star = document.createElement('div');
@@ -62,11 +66,11 @@ const loading = {
             starsContainer.appendChild(star);
         }
         
-        // Append to app
         this.container.appendChild(universeFlow);
-        document.getElementById('app').appendChild(this.container);
+        this.overlay.appendChild(this.container);
+        document.body.appendChild(this.overlay);
         
-        // Start text animation
+        // Text animation
         const loadingTexts = [
             "Đang tải dữ liệu...",
             "Đang kết nối lượng tử...",
@@ -87,18 +91,13 @@ const loading = {
     },
     
     finish() {
-        // If not running, do nothing
-        if (!this.container) return;
-        
-        // Clear interval and remove container
+        if (!this.overlay) return;
         clearInterval(this.intervalId);
-        this.container.remove();
+        this.overlay.remove();
+        this.overlay = null;
         this.container = null;
         this.textElement = null;
         this.intervalId = null;
     }
 };
-
-// Example usage (for testing)
-loading.start();
-setTimeout(() => loading.finish(), 10000);
+loading.start()
