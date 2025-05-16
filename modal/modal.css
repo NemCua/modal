@@ -1,0 +1,81 @@
+body{
+    height: 3000px;
+}
+.overlay{
+    position: fixed; /* ← sửa chỗ này */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); /* nên dùng rgba để có độ trong suốt */
+    z-index: 999;
+}
+.modal{
+    width: 500px;
+    height: auto;
+    background-color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    padding: 30px;
+}
+.xmark{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+svg{
+    width: 20px;
+    height: 20px;
+}
+.content-modal {
+    
+}
+
+.content-modal h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.content-modal .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-modal label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.content-modal input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.content-modal input[type="text"]:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.content-modal .button-enter-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #007BFF;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.content-modal .button-enter-submit:hover {
+    background-color: #0056b3;
+}
