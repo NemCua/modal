@@ -141,30 +141,3 @@ export function Modal(html) {
 
 // Để test nhanh, bạn có thể gọi trực tiếp:
 
-export async function crateModal(modal,api=null){
-    try {
-        let data = await modal.openModal()
-        if(data){
-            modal.closeModal()
-        }
-        if(api){
-            const response = await fetch(`${api}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
-    
-            const result = await response.json();
-            if (response.ok) {
-                alert("Sản phẩm đã được thêm thành công!");
-                console.log("Phản hồi từ server:", result);
-            } else {
-                throw new Error(result.message || "Đã xảy ra lỗi khi thêm sản phẩm.");
-            }
-        }
-    } catch (error) {
-        console.error(error)
-    }
-}

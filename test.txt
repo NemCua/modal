@@ -13,4 +13,17 @@ import {crateModal,Modal} from '/modal.js'
         <button class="button-enter-submit" type="submit">Xác nhận</button>
     </form>
 </div>
-crateModal(modal1,api)
+cach dung////////////////
+async function crateModal(modal,api=null){
+    try {
+        let data = await modal.openModal()
+        if(data){
+            modal.closeModal()
+        }
+        
+        
+    } catch (error) {
+        console.error(error)
+    }
+}
+crateModal(modal)
