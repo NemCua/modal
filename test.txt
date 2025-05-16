@@ -27,3 +27,12 @@ async function crateModal(modal,api=null){
     }
 }
 crateModal(modal)
+
+
+
+
+
+
+toast 
+const problemToast = new ToastMessage("Hãy đăng nhập trước", "problem");
+problemToast.openToast();
