@@ -1,0 +1,34 @@
+.toast-message{
+    width: 400px;
+    height: 70px;
+    
+    border-radius: 5px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 30px;
+    gap: 15px;
+}
+.toast-message.toast-problem-container{
+    background-color: #FEF5EB;
+    border: 2px solid #FDECCE;
+}
+.toast-message.toast-success-container{
+    border-color: #c6f6d5;
+    background-color: #f0fff4;
+}
+.toast-message.toast-fail-container{
+    background-color: #feebf1;
+    border: 2px solid #fdced1;
+}
+svg{
+    width: 40px;
+    height: 40px;
+    
+}
+svg.toast-problem-icon{
+    fill: #FBD8A5;
+}
+svg.toast-success-icon{
+    fill: #4caf50;
+}
