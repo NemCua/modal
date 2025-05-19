@@ -53,8 +53,9 @@ export function Modal(html) {
             if (form) {
                 form.onsubmit = (e) => {
                     e.preventDefault(); // Chặn reload trang
-
-                    const formData = {}; // Tạo một đối tượng để lưu trữ dữ liệu form
+                    this.closeModal()//
+                    let formData
+                    formData = {}; // Tạo một đối tượng để lưu trữ dữ liệu form
 
                     // Lấy tất cả các input elements bên trong form
                     const inputs = form.querySelectorAll("input, textarea, select");
@@ -92,7 +93,71 @@ export function Modal(html) {
             currentOverlay = null; // Reset lại để có thể mở modal khác
         }
     }
+    
 }
+
+
+
+export function modalAlert(text){
+    new Modal(
+        `
+        <strong>${text}</strong>
+        `
+    ).openModal()
+}
+export function modalConfirm(message) {
+    return new Promise((resolve) => {
+        // Tạo overlay
+        const overlay = document.createElement("div");
+        overlay.classList.add("overlay");
+
+        // Khi click vào overlay (nền đen) thì đóng
+        overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+                resolve(false);
+            }
+        });
+
+        // Tạo modal
+        const modal = document.createElement("div");
+        modal.classList.add("modal");
+
+        // Xmark để đóng
+        const xmark = document.createElement("div");
+        xmark.classList.add("xmark");
+        xmark.innerHTML = `<svg class="svg-modal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M231 256L374.6 112.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L186 210.7 42.4 67.1C29.9 54.6 9.6 54.6-2.9 67.1s-12.5 32.8 0 45.3L140.9 256 2.9 398.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L186 301.3l143.6 143.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L231 256z"/></svg>`;
+        xmark.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(false);
+        };
+
+        // Nội dung thông báo
+        const content = document.createElement("p");
+        content.classList.add("confirm-text");
+        content.innerHTML = message;
+
+        // Nút OK xác nhận
+        const btn = document.createElement("button");
+        btn.classList.add("confirm-button");
+        btn.textContent = "OK";
+        btn.onclick = () => {
+            document.body.removeChild(overlay);
+            resolve(true);
+        };
+
+        // Gắn mọi thứ vào DOM
+        modal.appendChild(xmark);
+        modal.appendChild(content);
+        modal.appendChild(btn);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    });
+}
+
+
+
+
 
 // Định nghĩa HTML cho modal1 với thuộc tính 'name' cho các input
 

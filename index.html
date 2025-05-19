@@ -11,7 +11,7 @@
 <body>
     <script type="module">
 
-import { Modal } from "./modal.js"
+import { Modal,modalAlert,modalConfirm } from "./modal.js"
 import {ToastMessage} from "./toast.js"
 import {loading} from "./loading.js"
 let formAddProducs = new Modal(
@@ -70,18 +70,27 @@ let formAddProducs = new Modal(
 </div>
     `
 )
-    let a
-    async function callA(){
-        a = await formAddProducs.openModal()
-        console.log(a)
-        if(a){
-            new ToastMessage("oke", "success").openToast()
-            loading.start()
-        }else{
+    // let a
+    // async function callA(){
+    //     a = await formAddProducs.openModal()
+    //     console.log(a)
+    //     if(a){
+    //         new ToastMessage("oke", "success").openToast()
+    //         loading.start()
+    //     }else{
             
+    //     }
+    // }
+    // callA()
+    
+    modalConfirm("Bạn có chắc chắn muốn xoá?")
+    .then(confirmed => {
+        if (confirmed) {
+            console.log("Đã xác nhận xoá");
+        } else {
+            console.log("Đã huỷ");
         }
-    }
-    callA()
+    });
     
     </script>
 </body>
