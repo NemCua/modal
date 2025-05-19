@@ -2,7 +2,7 @@ export function Modal(html) {
     this.html = html;
     let currentOverlay = null; // Để quản lý overlay hiện tại
 
-    this.openModal = function() {
+    this.openModal = function () {
         return new Promise((resolve, reject) => {
             if (currentOverlay) {
                 // Nếu đã có modal mở, bạn có thể chọn không làm gì,
@@ -22,11 +22,11 @@ export function Modal(html) {
             modalDiv.innerHTML = this.html; // Gán HTML được truyền vào
             overlay.appendChild(modalDiv);
             let xmark = document.createElement("div")
-            xmark.innerHTML=`
+            xmark.innerHTML = `
                 <svg class="svg-modal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!-- Font Awesome Pro 6.0.0-alpha2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M312.973 375.032C322.342 384.401 322.342 399.604 312.973 408.973S288.401 418.342 279.032 408.973L160 289.941L40.968 408.973C31.599 418.342 16.396 418.342 7.027 408.973S-2.342 384.401 7.027 375.032L126.059 256L7.027 136.968C-2.342 127.599 -2.342 112.396 7.027 103.027S31.599 93.658 40.968 103.027L160 222.059L279.032 103.027C288.401 93.658 303.604 93.658 312.973 103.027S322.342 127.599 312.973 136.968L193.941 256L312.973 375.032Z"></path></svg>
             `
             modalDiv.appendChild(xmark)
-            xmark.className="xmark"
+            xmark.className = "xmark"
             const closeModalHandler = (reason) => {
                 this.closeModal();
                 reject(reason);
@@ -55,25 +55,17 @@ export function Modal(html) {
                     e.preventDefault(); // Chặn reload trang
 
                     const formData = {}; // Tạo một đối tượng để lưu trữ dữ liệu form
-                    
+
                     // Lấy tất cả các input elements bên trong form
-                    const inputs = form.querySelectorAll("input[type='text'], input[type='email'], input[type='number'], textarea, select"); // Mở rộng selector nếu cần
+                    const inputs = form.querySelectorAll("input, textarea, select");
 
                     inputs.forEach(input => {
-                        // Sử dụng thuộc tính 'name' của input làm key cho đối tượng formData.
-                        // Nếu không có 'name', bạn có thể dùng 'className', 'id', hoặc một thuộc tính tùy chỉnh.
-                        // Đảm bảo các input có thuộc tính 'name' duy nhất và có ý nghĩa.
-                        if (input.name) {
-                            formData[input.name] = input.value;
-                        } else if (input.className) {
-                            // Fallback sử dụng className nếu không có name (chỉ lấy class đầu tiên nếu có nhiều)
-                            // Cẩn thận: class có thể không duy nhất hoặc chứa nhiều giá trị
-                            const key = input.className.split(' ')[0]; // Lấy class đầu tiên
-                            if (key) {
-                                formData[key] = input.value;
-                            }
+                        if (!input.name) return; // Bỏ qua nếu không có name
+
+                        if (input.type === 'checkbox') {
+                            formData[input.name] = input.checked; // Lưu true/false
                         } else {
-                            console.warn("Input không có thuộc tính 'name' hoặc 'className' để làm key:", input);
+                            formData[input.name] = input.value;
                         }
                     });
 
@@ -94,7 +86,7 @@ export function Modal(html) {
         });
     }
 
-    this.closeModal = function() {
+    this.closeModal = function () {
         if (currentOverlay && currentOverlay.parentNode) {
             currentOverlay.parentNode.removeChild(currentOverlay);
             currentOverlay = null; // Reset lại để có thể mở modal khác

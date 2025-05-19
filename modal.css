@@ -1,35 +1,38 @@
-
-.overlay{
-    position: fixed; /* ← sửa chỗ này */
+.overlay {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5); /* nên dùng rgba để có độ trong suốt */
+    background-color: rgba(0, 0, 0, 0.5);
     z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.modal{
-    width: 500px;
-    height: auto;
+
+.modal {
+    width: 600px;
+    max-height: 90vh;
     background-color: white;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
+    position: relative;
     padding: 30px;
+    border-radius: 8px;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
-.xmark{
+
+.xmark {
     position: absolute;
     right: 10px;
     top: 10px;
+    cursor: pointer;
 }
-.svg-modal{
+
+.svg-modal {
     width: 20px;
     height: 20px;
 }
-/* .content-modal {
-    
-} */
 
 .content-modal h1 {
     text-align: center;
@@ -37,18 +40,33 @@
     font-size: 24px;
 }
 
-.content-modal .form-group {
-    margin-bottom: 15px;
+.content-modal form {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
+/* Chia 2 cột khi có nhiều input */
+.content-modal .form-group {
+    flex: 1 1 45%; /* mỗi input chiếm khoảng 45% chiều rộng */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+/* Label */
 .content-modal label {
     margin-bottom: 5px;
     font-weight: bold;
+    font-size: 14px;
 }
 
-.content-modal input[type="text"] {
+/* Input chung */
+.content-modal input[type="text"],
+.content-modal input[type="email"],
+.content-modal input[type="number"],
+.content-modal select,
+.content-modal textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -56,11 +74,59 @@
     transition: border-color 0.3s;
 }
 
-.content-modal input[type="text"]:focus {
+.content-modal input:focus,
+.content-modal textarea:focus,
+.content-modal select:focus {
     border-color: #007BFF;
     outline: none;
 }
 
+/* Checkbox đẹp hơn */
+.content-modal input[type="checkbox"] {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+}
+
+.content-modal .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 15px;
+    position: relative;
+    padding-left: 30px;
+}
+
+.content-modal .checkbox-wrapper::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #007BFF;
+    border-radius: 4px;
+    background-color: white;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.content-modal input[type="checkbox"]:checked + .checkbox-wrapper::before {
+    background-color: #007BFF;
+    border-color: #007BFF;
+}
+
+.content-modal input[type="checkbox"]:checked + .checkbox-wrapper::after {
+    content: "✔";
+    position: absolute;
+    left: 4px;
+    top: 0px;
+    color: white;
+    font-size: 14px;
+}
+
+/* Nút submit */
 .content-modal .button-enter-submit {
     width: 100%;
     padding: 12px;
@@ -72,6 +138,7 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-top: 20px;
 }
 
 .content-modal .button-enter-submit:hover {

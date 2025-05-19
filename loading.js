@@ -1,4 +1,4 @@
-const loading = {
+export const loading = {
     intervalId: null,
     overlay: null,
     container: null,
@@ -100,4 +100,4 @@ const loading = {
         this.intervalId = null;
     }
 };
-loading.start()
+

@@ -1,4 +1,4 @@
-function ToastMessage(text, toast) {
+export function ToastMessage(text, toast) {
     this.text = text;
     this.toast = toast
     this.openToast = function () {
