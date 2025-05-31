@@ -2,96 +2,96 @@ export function Modal(html) {
     this.html = html;
     let currentOverlay = null; // Để quản lý overlay hiện tại
 
-    this.openModal = function () {
+    this.openModal = function (callbackFunction) {
         return new Promise((resolve, reject) => {
             if (currentOverlay) {
-                // Nếu đã có modal mở, bạn có thể chọn không làm gì,
-                // đóng modal cũ, hoặc reject Promise này.
-                // Ở đây, chúng ta sẽ reject để tránh mở nhiều modal cùng lúc.
                 console.warn("Một modal khác đang được mở. Hãy đóng nó trước.");
                 return reject("Một modal khác đang được mở.");
             }
-
+    
             let overlay = document.createElement("div");
             overlay.className = "overlay";
-            document.querySelector("body").appendChild(overlay);
-            currentOverlay = overlay; // Lưu overlay hiện tại
-
-            let modalDiv = document.createElement("div"); // Đổi tên biến để tránh nhầm lẫn với constructor Modal
+            document.body.appendChild(overlay);
+            currentOverlay = overlay;
+    
+            // 👉 Chặn cuộn
+            document.body.classList.add("modal-open");
+    
+            let modalDiv = document.createElement("div");
             modalDiv.className = "modal";
-            modalDiv.innerHTML = this.html; // Gán HTML được truyền vào
+            modalDiv.innerHTML = this.html;
             overlay.appendChild(modalDiv);
-            let xmark = document.createElement("div")
+    
+            let xmark = document.createElement("div");
+            xmark.className = "xmark";
             xmark.innerHTML = `
-                <svg class="svg-modal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!-- Font Awesome Pro 6.0.0-alpha2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M312.973 375.032C322.342 384.401 322.342 399.604 312.973 408.973S288.401 418.342 279.032 408.973L160 289.941L40.968 408.973C31.599 418.342 16.396 418.342 7.027 408.973S-2.342 384.401 7.027 375.032L126.059 256L7.027 136.968C-2.342 127.599 -2.342 112.396 7.027 103.027S31.599 93.658 40.968 103.027L160 222.059L279.032 103.027C288.401 93.658 303.604 93.658 312.973 103.027S322.342 127.599 312.973 136.968L193.941 256L312.973 375.032Z"></path></svg>
-            `
-            modalDiv.appendChild(xmark)
-            xmark.className = "xmark"
+                <svg class="svg-modal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <path d="M312.973 375.032C322.342 384.401 322.342 399.604 312.973 408.973S288.401 418.342 279.032 408.973L160 289.941L40.968 408.973C31.599 418.342 16.396 418.342 7.027 408.973S-2.342 384.401 7.027 375.032L126.059 256L7.027 136.968C-2.342 127.599 -2.342 112.396 7.027 103.027S31.599 93.658 40.968 103.027L160 222.059L279.032 103.027C288.401 93.658 303.604 93.658 312.973 103.027S322.342 127.599 312.973 136.968L193.941 256L312.973 375.032Z"></path>
+                </svg>
+            `;
+            modalDiv.appendChild(xmark);
+    
+            if (typeof callbackFunction === "function") {
+                callbackFunction();
+            }
+    
             const closeModalHandler = (reason) => {
                 this.closeModal();
                 reject(reason);
             };
+    
             xmark.onclick = () => {
                 console.log("Đóng modal bằng nút X");
                 closeModalHandler("Modal đã được đóng bằng nút X.");
             };
+    
             overlay.onclick = (event) => {
-                if (event.target === overlay) { // Chỉ đóng khi click trực tiếp vào overlay
+                if (event.target === overlay) {
                     console.log("Đóng modal bằng cách click vào overlay");
                     closeModalHandler("Modal đã được đóng khi click vào overlay.");
                 }
             };
+    
             const escapeKeyListener = (event) => {
                 if (event.key === "Escape") {
                     console.log("Đóng modal bằng phím Escape");
-                    // Loại bỏ event listener này trước khi đóng để tránh bị gọi lại nếu modal được mở lại nhanh chóng
                     document.removeEventListener('keydown', escapeKeyListener);
                     closeModalHandler("Modal đã được đóng bằng phím Escape.");
                 }
             };
+            document.addEventListener('keydown', escapeKeyListener);
+    
             const form = modalDiv.querySelector("form");
             if (form) {
                 form.onsubmit = (e) => {
-                    e.preventDefault(); // Chặn reload trang
-                    this.closeModal()//
-                    let formData
-                    formData = {}; // Tạo một đối tượng để lưu trữ dữ liệu form
-
-                    // Lấy tất cả các input elements bên trong form
+                    e.preventDefault();
+                    this.closeModal();
+                    let formData = {};
                     const inputs = form.querySelectorAll("input, textarea, select");
-
+    
                     inputs.forEach(input => {
-                        if (!input.name) return; // Bỏ qua nếu không có name
-
+                        if (!input.name) return;
                         if (input.type === 'checkbox') {
-                            formData[input.name] = input.checked; // Lưu true/false
+                            formData[input.name] = input.checked;
                         } else {
                             formData[input.name] = input.value;
                         }
                     });
-
+    
                     console.log("Dữ liệu form đã nhập:", formData);
-                    // this.closeModal(); // Đóng modal sau khi xử lý
-                    resolve(formData); // Resolve Promise với đối tượng chứa dữ liệu form
+                    resolve(formData);
                 };
             }
-
-            // (Tùy chọn) Xử lý đóng modal khi click ra ngoài
-            overlay.onclick = (event) => {
-                if (event.target === overlay) {
-                    this.closeModal();
-                    reject("Modal đã được đóng bởi người dùng (click ra ngoài)."); // Reject nếu modal bị đóng mà không submit
-                }
-            };
-
         });
     }
-
+    
     this.closeModal = function () {
         if (currentOverlay && currentOverlay.parentNode) {
             currentOverlay.parentNode.removeChild(currentOverlay);
-            currentOverlay = null; // Reset lại để có thể mở modal khác
+            currentOverlay = null;
         }
+        // 👉 Khôi phục cuộn
+        document.body.classList.remove("modal-open");
     }
     
 }
